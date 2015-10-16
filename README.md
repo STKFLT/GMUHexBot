@@ -8,6 +8,7 @@ Contains:
 * offsetCalcTool.ino - the sketch that aids in testing servos and finding offset values.
 
 ####Leg Assignment
+<pre>
      Front
    _________
  4-|-5   11-|-10
@@ -16,3 +17,4 @@ Contains:
    |        |
  0-|-1    7-|-6
    ----------
+</pre>
