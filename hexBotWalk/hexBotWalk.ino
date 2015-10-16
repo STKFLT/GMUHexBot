@@ -10,12 +10,14 @@
 #define ROLL 30
 #define PITCH_POSITIVE 80
 #define PITCH_NEGATIVE 105
+#define PIVOT_PITCH_POSITIVE 80
+#define PIVOT_PITCH_NEGATIVE 95
 #define WAIT 500
 
 /* Array of the 12 servos on the hexBot. */
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
-/* In the pair patter on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
+/* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
 int degree0offset[12] =   {140,   0,  35, 180, 0/*Broken*/,   0,  45, 180, 140,   0,  30, 180};
 int degree180offset[12] = {  0, 180, 160,   0, 0          , 180, 145,   0,   0, 180, 160,   0};
 
@@ -40,7 +42,9 @@ void setup()
 void loop()
 {
   /* Right step. */
-  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+//  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  /* right turn */
+  turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, PIVOT_PITCH_POSITIVE, PIVOT_PITCH_NEGATIVE, WAIT);
   
   //delay(500);
   
@@ -48,6 +52,12 @@ void loop()
   step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
 
 }
+
+void backward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
+{
+  step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
+}
+
 
 /* Steps the legs in the triangle specified with the specified angles and wait time. */
 /* Param(s): isRight - a boolean for if the step is the right side or left.          */
@@ -87,6 +97,50 @@ void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int w
   Serial.println("Step Completed");
 }
 
+void turn(boolean isRight, int roll, 
+          int movePitchPositive, int movePitchNegative, 
+          int pivotPitchPositive, int pivotPitchNegative,
+          int wait)
+{
+  /* Gets the starting index of the servos. */
+  int legSet = isRight ? 0 : 6;
+ 
+  //roll out
+  for(int i = legSet; i < legSet + 6; i = i + 2){
+    writeServo(i, roll);
+  }
+  delay(wait);
+  
+  
+  //pitch forward
+//  for(int i = legSet; i < legSet + 6; i = i + 2){
+//    writeServo(i+1, movePitchPositive);
+//  }
+  writeServo(legSet + 1, movePitchPositive); 
+  writeServo(legSet + 3, pivotPitchPositive);
+  writeServo(legSet + 5, movePitchPositive);
+ 
+  delay(wait);
+   
+  //roll in
+  for(int i = legSet; i < legSet + 6; i = i + 2){
+    writeServo(i, 0);
+  }
+  delay(wait);
+  
+  //pitch backward
+//  for(int i = legSet; i < legSet + 4; i = i + 2){
+//    writeServo(i+1, movePitchNegative);
+//  }
+
+  writeServo(legSet + 1, movePitchNegative);
+  writeServo(legSet + 3, pivotPitchNegative);
+  writeServo(legSet + 5, movePitchNegative);
+  
+  delay(wait);
+  
+  Serial.println("Step Completed");
+}
 
 /* Converts the desired degree to the servo speified's actual angle of rotation. */
 /* Param(s): servo - the index into the servo array for the servo desired.       */
