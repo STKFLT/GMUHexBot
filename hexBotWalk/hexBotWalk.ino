@@ -74,6 +74,7 @@ void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int w
        wait
        );
 
+/* Turn the hexbot either right or left. */
 void turn(boolean isRight, int roll, 
           int movePitchPositive, int movePitchNegative, 
           int pivotPitchPositive, int pivotPitchNegative,
