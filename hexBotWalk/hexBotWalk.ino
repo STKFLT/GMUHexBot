@@ -6,6 +6,12 @@
 /* Servo header for the 12 servos of the hexBot. */
 #include <Servo.h>
 
+/* Set constants for the walk loop */
+#define ROLL 30
+#define PITCH_POSITIVE 80
+#define PITCH_NEGATIVE 105
+#define WAIT 500
+
 /* Array of the 12 servos on the hexBot. */
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
@@ -34,12 +40,12 @@ void setup()
 void loop()
 {
   /* Right step. */
-  step(true, 30, 80, 105, 500);
+  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   
   //delay(500);
   
   /* Left step. */
-  step(false, 30, 80, 105, 500);
+  step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
 
 }
 
