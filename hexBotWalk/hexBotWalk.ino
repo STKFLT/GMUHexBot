@@ -67,35 +67,12 @@ void backward(boolean isRight, int roll, int pitchPositive, int pitchNegative, i
 /*           wait - the amount time in milliseconds to wait between parts.           */
 void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
 {
-  /* Gets the starting index of the servos. */
-  int legSet = isRight ? 0 : 6;
- 
-  //roll out
-  for(int i = legSet; i < legSet + 6; i = i + 2){
-    writeServo(i, roll);
-  }
-  delay(wait);
-  
-  //pitch forward
-  for(int i = legSet; i < legSet + 6; i = i + 2){
-    writeServo(i+1, pitchPositive);
-  }
-  delay(wait);
-   
-  //roll in
-  for(int i = legSet; i < legSet + 6; i = i + 2){
-    writeServo(i, 0);
-  }
-  delay(wait);
-  
-  //pitch backward
-  for(int i = legSet; i < legSet + 6; i = i + 2){
-    writeServo(i+1, pitchNegative);
-  }
-  delay(wait);
-  
-  Serial.println("Step Completed");
-}
+  turn(isRight, 
+       roll, 
+       pitchPositive, pitchNegative, //move legs
+       pitchPositive, pitchNegative, //pivot leg
+       wait
+       );
 
 void turn(boolean isRight, int roll, 
           int movePitchPositive, int movePitchNegative, 
