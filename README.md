@@ -4,7 +4,7 @@
 Public repository for the hexbot's arduino code.
 
 Contains:
-* hexBotWalk.ino - the sketch making robot walk, includes  calculated offsets
+* hexBotWalk.ino - the sketch making robot walk, includes calculated offsets
 * offsetCalcTool.ino - the sketch that aids in testing servos and finding offset values.
 
 ####Leg Assignment
