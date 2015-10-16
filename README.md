@@ -1,4 +1,4 @@
-# hexBotWalk
+# GMUHexBot
 #### Created for GMU Robotics Club
 
 Public repository for the hexbot's arduino code.
