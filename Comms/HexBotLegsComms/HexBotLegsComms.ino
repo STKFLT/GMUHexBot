@@ -62,7 +62,7 @@ void parseCMD(int num)
 	}
 }
 
-char* nextTreeBytes()
+char* nextThreeBytes()
 {
 	if(Wire.available() < 2)
 		return NULL;
