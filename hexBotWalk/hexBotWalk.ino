@@ -2,7 +2,7 @@
  * hexBotWalk
  * Sketch for a hexBot walk cycle.
  * Created for GMU Robotics club (Fall 2015).
- *IT IS I, COMRADE PAYNE
+ * Comment Editor: ComradePayne
  */
 /* Servo header for the 12 servos of the hexBot. */
 #include <Servo.h>
@@ -75,7 +75,15 @@ void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int w
        wait
        );
 
-/* Turn the hexbot either right or left. */
+/* Turn the hexbot either right or left. In theory, we cause the robot to bear left or right
+  (depending on isRight's value) by designating the tip of the respective triangle of legs as the "pivot leg".
+  This pivot leg would have a shorter stride than the two other legs, causing the robot to slowly turn itself right
+  or left, depending on which side the pivot leg is on.
+    Parameters: isRight- same function as for step()
+                roll - As step().
+                movePitch[Positive/Negative] - Analogous to pitch[Positive/Negative], designates the "normal" stride length. 
+                pivotPitch[Positive/Negative] - The special, smaller pitch variable, representing a shorter stride length.
+                wait - Length of time (in milliseconds) to delay before, in higher level functions, the opposite set of legs is moved.*/
 void turn(boolean isRight, int roll, 
           int movePitchPositive, int movePitchNegative, 
           int pivotPitchPositive, int pivotPitchNegative,
