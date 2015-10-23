@@ -7,7 +7,7 @@
 void setup()
 {
  	Wire.begin(8);                // join i2c bus with address #8
-	Wire.onReceive(parseCmd); // register event
+	Wire.onReceive(parseCMD); // register event
 	Serial.begin(9600);           // start serial for output
 }
 
@@ -33,48 +33,60 @@ void printCMD(int howMany)
 	{
 		Serial.print(sentArr[j]);
 	}
-	parseCMD(sentArr);
 }
 
 void parseCMD(int num)
 {
-	char[] cmd = nextThreeBytes();
-	if(cmd != "RBT")
-		return;
-	
-	while(cmd != "END" && Wire.available > 2)
-	{
-		cmd = nextThreeBytes();
-		if(cmd == "RUN")
-		{
-			cmd = nextThreeBytes();
-			do
-			{
-				if(cmd == "LFT")
-					//servo loop for turn left
-				else if(cmd == "RGT")
-				else if(cmd == "FWD")
-				else if(cmd == "BWD")
-				else
-					break;
-			}while(true);
-		}
-	}
+  char* cmd = nextThreeBytes();
+  if(cmd != "RBT")
+    return;
+  
+  while(cmd != "END" && Wire.available() > 2)
+  {
+    cmd = nextThreeBytes();
+    if(cmd == "RUN")
+    {
+      cmd = nextThreeBytes();
+      do
+      {
+        if(cmd == "LFT")
+        {
+          //servo loop for turn left
+        }
+        else if(cmd == "RGT")
+        {
+          //servo loop for turn right
+        }
+        else if(cmd == "FWD")
+        {
+          //servo loop for forwards
+        }       
+        else if(cmd == "BWD")
+        {
+          //servo loop for back
+        }
+        else
+        {
+          break;
+        }
+      }while(true);
+    }
+  }
 }
 
 char* nextThreeBytes()
 {
-	if(Wire.available() < 2)
-		return NULL;
-
-	char[] cmd = new char[3];
-	for(int i = 0; i < 3; i++)
-	{
-		cmd[i] = Wire.read();
-	}
-	// read the space
-	if(Wire.available() > 0)
-		Wire.read();	
-
-	return cmd;
+  if(Wire.available() < 2)
+    return NULL;
+  
+  char cmd[3];
+  for(int i = 0; i < 3; i++)
+  {
+    cmd[i] = Wire.read();
+  }
+  // read the space
+  if(Wire.available() > 0)
+    Wire.read();	
+  
+  return cmd;
 }
