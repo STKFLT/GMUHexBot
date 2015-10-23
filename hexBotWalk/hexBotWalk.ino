@@ -2,6 +2,7 @@
  * hexBotWalk
  * Sketch for a hexBot walk cycle.
  * Created for GMU Robotics club (Fall 2015).
+ *IT IS I, COMRADE PAYNE
  */
 /* Servo header for the 12 servos of the hexBot. */
 #include <Servo.h>
