@@ -7,7 +7,7 @@ Contains:
 * hexBotWalk.ino - the sketch making robot walk, includes calculated offsets.
 * offsetCalcTool.ino - the sketch that aids in testing servos and finding offset values.
 * hexBotLegsComms.ino - Communications protocol for the slave Arduino, in this case the leg controler, to read.
-* hexBotBrainComms.ino - Communications protocol for the master Arduino, acting as a brain, to send commands out via I<sup>2<>C.
+* hexBotBrainComms.ino - Communications protocol for the master Arduino, acting as a brain, to send commands out via I<sup>2</sup>C.
 
 ####Leg Assignment
 <pre>
