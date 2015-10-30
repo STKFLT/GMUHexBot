@@ -4,11 +4,14 @@
  */
 #include <Wire.h>
 
+#define LED_PIN 13
+
 void setup()
 {
  	Wire.begin(8);                // join i2c bus with address #8
 	Wire.onReceive(parseCMD); // register event
 	Serial.begin(9600);           // start serial for output
+	pinMode(LED_PIN, OUTPUT)
 }
 
 void loop()
@@ -38,30 +41,30 @@ void printCMD(int howMany)
 void parseCMD(int num)
 {
   char* cmd = nextThreeBytes();
-  if(cmd != "RBT")
+  if(strcmp(cmd,"RBT"))
     return;
   
-  while(cmd != "END" && Wire.available() > 2)
+  while(strcmp(cmd, "END") && Wire.available() > 2)
   {
     cmd = nextThreeBytes();
-    if(cmd == "RUN")
+    if(strcmp(cmd, "RUN") == 0)
     {
       cmd = nextThreeBytes();
       do
       {
-        if(cmd == "LFT")
+        if(strcmp(cmd, "LFT") == 0)
         {
           //servo loop for turn left
         }
-        else if(cmd == "RGT")
+        else if(strcmp(cmd, "RGT") == 0) 
         {
           //servo loop for turn right
         }
-        else if(cmd == "FWD")
+        else if(strcmp(cmd, "FWD") == 0) 
         {
           //servo loop for forwards
         }       
-        else if(cmd == "BWD")
+        else if(strcmp(cmd, "BWD") == 0 )
         {
           //servo loop for back
         }
@@ -70,6 +73,18 @@ void parseCMD(int num)
           break;
         }
       }while(true);
+    }
+    else if(strcmp(cmd, "LED") == 0)
+    {
+	cmd = nextThreeBytes();
+        if(strcmp(cmd, "ONN") == 0)
+	{
+		digitalWrite(LED_PIN, HIGH);
+	}
+	else if(strcmp(cmd,"OFF") == 0)
+	{
+		digitalWrite(LED_PIN, LOW);
+	}
     }
   }
 }
