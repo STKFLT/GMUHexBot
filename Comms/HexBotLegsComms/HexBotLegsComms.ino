@@ -76,7 +76,10 @@ void parseCMD(int num)
 
 char* nextThreeBytes()
 {
-  if(Wire.available() < 2)
+//This function reads three bytes from the stream, right? It oughta return NULL when less than 3.
+//If Wire.available() = 2, it'll still try to read it. Unacceptabllllllle! --Robert (ComradePayne)
+  //if(Wire.available() < 2)
+  if(Wire.available() < 3)
     return NULL;
   
   char cmd[3];
