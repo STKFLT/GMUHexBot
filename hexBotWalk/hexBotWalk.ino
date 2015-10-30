@@ -25,6 +25,7 @@ int degree180offset[12] = {  0, 180, 160,   0, 0          , 180, 145,   0,   0, 
 /* Initializes the 12 servos. */
 void setup()
 {
+  setupWire();
   Serial.begin(9600);
 
   /* Loop through the servos. */
@@ -45,18 +46,23 @@ void loop()
   /* Right step. */
 //  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   /* right turn */
-  turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, PIVOT_PITCH_POSITIVE, PIVOT_PITCH_NEGATIVE, WAIT);
+  
   
   //delay(500);
   
   /* Left step. */
-  step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  delay(50);
 
 }
 
 void backward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
 {
   step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
+}
+void forward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
+{
+  step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
 }
 
 
@@ -74,7 +80,7 @@ void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int w
        pitchPositive, pitchNegative, //pivot leg
        wait
        );
-
+}
 /* Turn the hexbot either right or left. In theory, we cause the robot to bear left or right
   (depending on isRight's value) by designating the tip of the respective triangle of legs as the "pivot leg".
   This pivot leg would have a shorter stride than the two other legs, causing the robot to slowly turn itself right
