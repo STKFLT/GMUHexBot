@@ -3,15 +3,15 @@
  * Slave communication protocol for the HexBot
  */
 #include <Wire.h>
-
 #define LED_PIN 13
 
 void setup()
 {
- 	Wire.begin(8);                // join i2c bus with address #8
-	Wire.onReceive(parseCMD); // register event
-	Serial.begin(9600);           // start serial for output
-	pinMode(LED_PIN, OUTPUT)
+  Wire.begin(8);                // join i2c bus with address #8
+  Wire.onReceive(parseCMD); // register event
+  Serial.begin(9600);           // start serial for output
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, LOW);
 }
 
 void loop()
@@ -26,10 +26,9 @@ void printCMD(int howMany)
 	char sentArr[Wire.available()];
 	byte i = 0;
   
-	while (1 < Wire.available()) {
+	while (Wire.available() > 0) {
 		char c = Wire.read(); // receive byte as a character
-		sentArr[i] = c;
-		i++;
+		sentArr[i++] = c;
   	} 
   
 	for (int j = 0; j < i; j++)
@@ -41,12 +40,17 @@ void printCMD(int howMany)
 void parseCMD(int num)
 {
   char* cmd = nextThreeBytes();
-  if(strcmp(cmd,"RBT"))
+  Serial.print("cmd: ");
+  Serial.println(cmd);
+  if(strcmp(cmd,"RBT") != 0)
     return;
   
-  while(strcmp(cmd, "END") && Wire.available() > 2)
+  while(strcmp(cmd, "END") && Wire.available() > 0)
   {
     cmd = nextThreeBytes();
+    Serial.print("cmd: ");
+    Serial.println(cmd);
+  
     if(strcmp(cmd, "RUN") == 0)
     {
       cmd = nextThreeBytes();
@@ -77,6 +81,7 @@ void parseCMD(int num)
     else if(strcmp(cmd, "LED") == 0)
     {
 	cmd = nextThreeBytes();
+        
         if(strcmp(cmd, "ONN") == 0)
 	{
 		digitalWrite(LED_PIN, HIGH);
@@ -97,11 +102,12 @@ char* nextThreeBytes()
   if(Wire.available() < 3)
     return NULL;
   
-  char cmd[3];
+  char* cmd = (char*)calloc(4, sizeof(char));
   for(int i = 0; i < 3; i++)
   {
     cmd[i] = Wire.read();
   }
+  
   // read the space
   if(Wire.available() > 0)
     Wire.read();	
