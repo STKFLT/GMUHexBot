@@ -22,8 +22,11 @@ void loop() {
 //    Serial.println();
 //  }
   
+  while(Serial.available() == 0)
+  {
+    delay(100);
+  }
   Wire.beginTransmission(8); // transmit to device #8
-  
   while (Serial.available() > 0){
     char inChar = Serial.read();
     Serial.print(inChar);
