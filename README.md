@@ -12,7 +12,7 @@ Contains:
 ####Leg Assignment
 <pre>
      Front
-   _________
+   __________
  4-|-5   11-|-10
    |        |
  8-|-9    3-|-2
