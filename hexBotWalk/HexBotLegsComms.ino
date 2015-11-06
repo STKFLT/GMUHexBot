@@ -62,12 +62,14 @@ void parseCMD(int num)
     
     /* Move the robot. */
     if(strcmp(cmd, "RUN") == 0)
-    {
-      cmd = nextThreeBytes();
-      
+    {      
       /* Loop through all movement commands. */
       do
       {
+        cmd = nextThreeBytes();
+        Serial.print("cmd: ");
+        Serial.println(cmd);
+     
         if(strcmp(cmd, "LFT") == 0)
         {
           //servo loop for turn left
@@ -98,6 +100,8 @@ void parseCMD(int num)
     else if(strcmp(cmd, "LED") == 0)
     {
       cmd = nextThreeBytes();
+      Serial.print("cmd: ");
+      Serial.println(cmd);
       
       /* Turn the LED on. */
       if(strcmp(cmd, "ONN") == 0)

@@ -43,8 +43,10 @@ void parseCMD(int num)
   Serial.print("cmd: ");
   Serial.println(cmd);
   if(strcmp(cmd,"RBT") != 0)
+  { 
+    Serial.println("Returning"); 
     return;
-  
+  }
   while(strcmp(cmd, "END") && Wire.available() > 0)
   {
     cmd = nextThreeBytes();
@@ -53,9 +55,9 @@ void parseCMD(int num)
   
     if(strcmp(cmd, "RUN") == 0)
     {
-      cmd = nextThreeBytes();
       do
       {
+        cmd = nextThreeBytes();
         if(strcmp(cmd, "LFT") == 0)
         {
           //servo loop for turn left
@@ -87,9 +89,10 @@ void parseCMD(int num)
 	    }
 	    else if(strcmp(cmd,"OFF") == 0)
 	    {
-      digitalWrite(LED_PIN, LOW)	      }
+      digitalWrite(LED_PIN, LOW);	      }
     }
   }
+  Serial.println("Returning");
 }
 
 char* nextThreeBytes()
