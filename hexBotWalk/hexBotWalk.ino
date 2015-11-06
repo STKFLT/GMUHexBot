@@ -135,6 +135,52 @@ void turn(boolean isRight, int roll,
   
   Serial.println("Step Completed");
 }
+//Strafes a single step to the left/right, depending on IsRight's value. Uses the roll and wait values we 
+//#define'd earlier in this sketch.
+void strafe(boolean isRight, int roll, int wait){
+  int rowLeftIndices[] = {0, 8, 4};
+  int rowRightIndices[] = {6, 2, 10};
+  
+  int StartingRow[] = isRight ? rowRight: rowLeft;
+  int FollowingRow[] = isRight ? rowLeft: rowRight;
+  
+  /*Begin strafe procedure:
+   1. Move starting legs out.
+   2. Move starting legs in, dragging bot with it.
+   3. Move following legs in, poised to extend.
+   4. Extend following legs to 0 degrees.
+   5. Slightly afterwards, extend starting legs to 0 degrees, completing the step.
+   */
+  
+  for(int i = 0; i <=3; i++){
+    writeServo(StartingRow[i], roll);
+  }
+  
+  delay(wait);
+  
+  for(int i = 0; i<=3; i++){
+    writeServo(StartingRow[i],-roll);
+  }
+  
+  delay(wait);
+  
+  for(int i = 0; i<=3; i++){
+    writeServo(FollowingRow[i], -roll);
+  }
+  
+  for(int i =0; i<=3; i++){
+    writeServo(FollowingRow[i], 0);
+  }
+  
+  delay(wait);
+  
+  for(int i =0; i<=3; i++){
+    writeServo(StartingRow[i], 0);
+  }
+  
+}
+
+
 
 /* Converts the desired degree to the servo speified's actual angle of rotation. */
 /* Param(s): servo - the index into the servo array for the servo desired.       */
