@@ -80,16 +80,14 @@ void parseCMD(int num)
     }
     else if(strcmp(cmd, "LED") == 0)
     {
-	cmd = nextThreeBytes();
-        
-        if(strcmp(cmd, "ONN") == 0)
-	{
-		digitalWrite(LED_PIN, HIGH);
-	}
-	else if(strcmp(cmd,"OFF") == 0)
-	{
-		digitalWrite(LED_PIN, LOW);
-	}
+	    cmd = nextThreeBytes();  
+      if(strcmp(cmd, "ONN") == 0)
+	    {
+		    digitalWrite(LED_PIN, HIGH);
+	    }
+	    else if(strcmp(cmd,"OFF") == 0)
+	    {
+      digitalWrite(LED_PIN, LOW)	      }
     }
   }
 }
