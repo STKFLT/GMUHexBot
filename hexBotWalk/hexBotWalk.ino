@@ -20,14 +20,16 @@
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
 /* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
-//                          0    1    2    3    4            5    6    7    8    9    10   11
+/*                          0    1    2    3    4            5    6    7    8    9    10   11 */
 int degree0offset[12] =   {140,   0,  35, 180, 0/*Broken*/,   0,  75, 180, 140,   0,  30, 180};
 int degree180offset[12] = {  0, 180, 160,   0, 0          , 180, 145,   0,   0, 180, 160,   0};
 
 /* Initializes the 12 servos. */
 void setup()
 {
+  /* Set up the I2C code. */
   setupWire();
+  /* Begin serial communications. */
   Serial.begin(9600);
 
   /* Loop through the servos. */
@@ -39,81 +41,91 @@ void setup()
     writeServo(i, i%2 ? 90:0);
   }
   
-  delay(1000);
+  //delay(1000);
 }
 
 /* Loop through the walk cycle. */
 void loop()
 {
-  /* Right step. */
+  /* Run the command received over I2C. */
+  runCMD();  
+  
+  ///* Right step. */
   //step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  /* right turn */
-  
-  cmd_ctrl();  
   //delay(500);
-  
-  /* Left step. */
+  ///* Left step. */
   //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  
   delay(50);
 }
 
-void backward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
+/**
+  * Steps the legs backward in the triangle specified with the specified angles 
+  * and wait time.
+  * @param isRight A boolean for if the step is the right side or left.
+  */
+void backward(boolean isRight)
 {
   step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
 }
 
-void forward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
+/**
+  * Steps the legs forward in the triangle specified with the specified angles 
+  * and wait time.
+  * @param isRight A boolean for if the step is the right side or left.
+  */
+void forward(boolean isRight)
 {
-  //step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
-  writeServo(0, 90);
-  //writeServo(1, 90);
-  //writeServo(2, 90);
+  step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
 }
 
-/* Steps the legs in the triangle specified with the specified angles and wait time. */
-/* Param(s): isRight - a boolean for if the step is the right side or left.          */
-/*           roll - the roll angle of the steps.                                     */
-/*           pitchPositive - the positive pitch angle of the steps.                  */
-/*           pitchNegative - the negative pitch angle of the steps.                  */
-/*           wait - the amount time in milliseconds to wait between parts.           */
-void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
+/**
+  * Steps the legs in the triangle specified with the specified angles and wait 
+  * time.
+  * @param isRight A boolean for if the step is the right side or left.
+  * @param roll The roll angle of the steps.
+  * @param pitchPositive The positive pitch angle of the steps.
+  * @param pitchNegative - the negative pitch angle of the steps.
+  * @param wait The amount time in milliseconds to wait between parts.
+  */
+void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, 
+  int wait)
 {
-  turn(isRight, 
-       roll, 
-       pitchPositive, pitchNegative, //move legs
-       pitchPositive, pitchNegative, //pivot leg
-       wait
-       );
+  turn(isRight, roll, pitchPositive, pitchNegative, pitchPositive, 
+	pitchNegative, wait);
 }
 
-/* Turn the hexbot either right or left. In theory, we cause the robot to bear left or right
-  (depending on isRight's value) by designating the tip of the respective triangle of legs as the "pivot leg".
-  This pivot leg would have a shorter stride than the two other legs, causing the robot to slowly turn itself right
-  or left, depending on which side the pivot leg is on.
-    Parameters: isRight- same function as for step()
-                roll - As step().
-                movePitch[Positive/Negative] - Analogous to pitch[Positive/Negative], designates the "normal" stride length. 
-                pivotPitch[Positive/Negative] - The special, smaller pitch variable, representing a shorter stride length.
-                wait - Length of time (in milliseconds) to delay before, in higher level functions, the opposite set of legs is moved.*/
-void turn(boolean isRight, int roll, 
-          int movePitchPositive, int movePitchNegative, 
-          int pivotPitchPositive, int pivotPitchNegative,
-          int wait)
+/**
+  * Turn the hexBot either right or left. In theory, we cause the robot to bear 
+  * left or right (depending on isRight's value) by designating the tip of the 
+  * respective triangle of legs as the "pivot leg". This pivot leg would have a 
+  * shorter stride than the two other legs, causing the robot to slowly turn 
+  * itself right or left, depending on which side the pivot leg is on.
+  * @param isRight A boolean for if the step is the right side or left.
+  * @param roll The roll angle of the steps.
+  * @param movePitchPositive Designates the "normal" stride length. 
+  * @param movePitchNegative Designates the "normal" stride length. . 
+  * @param pivotPitchPositive The special, smaller pitch variable, representing 
+  *   a shorter stride length.
+  * @param pivotPitchNegative The special, smaller pitch variable, representing 
+  *   a shorter stride length.
+  * @param wait - Length of time (in milliseconds) to delay before, in higher 
+  *   level functions, the opposite set of legs is moved.
+  */
+void turn(boolean isRight, int roll, int movePitchPositive, 
+  int movePitchNegative, int pivotPitchPositive, int pivotPitchNegative,
+  int wait)
 {
   /* Gets the starting index of the servos. */
   int legSet = isRight ? 0 : 6;
  
   //roll out
-  for(int i = legSet; i < legSet + 6; i = i + 2){
+  for(int i = legSet; i < legSet + 6; i = i + 2)
+  {
     writeServo(i, roll);
   }
   delay(wait);
-  
-  
-  //pitch forward
-//  for(int i = legSet; i < legSet + 6; i = i + 2){
-//    writeServo(i+1, movePitchPositive);
-//  }
+
   writeServo(legSet + 1, movePitchPositive); 
   writeServo(legSet + 3, pivotPitchPositive);
   writeServo(legSet + 5, movePitchPositive);
@@ -126,11 +138,6 @@ void turn(boolean isRight, int roll,
   }
   delay(wait);
   
-  //pitch backward
-//  for(int i = legSet; i < legSet + 4; i = i + 2){
-//    writeServo(i+1, movePitchNegative);
-//  }
-
   writeServo(legSet + 1, movePitchNegative);
   writeServo(legSet + 3, pivotPitchNegative);
   writeServo(legSet + 5, movePitchNegative);
@@ -140,65 +147,74 @@ void turn(boolean isRight, int roll,
   Serial.println("Step Completed");
 }
 
-//Strafes a single step to the left/right, depending on IsRight's value. Uses the roll and wait values we 
-//#define'd earlier in this sketch.
-//void strafe(boolean isRight, int roll, int wait){
-/*  int rowLeftIndices[] = {0, 8, 4};
-  int rowRightIndices[] = {6, 2, 10};
+/** 
+  * Strafes a single step to the left/right, depending on IsRight's value. Uses 
+  * the roll and wait values we defined earlier in this sketch.
+  * @param isRight Is this strafe a right strafe.
+  * @param roll The roll angle for the strafe.
+  * @param wait The wait time between movements. 
+  */ 
+// void strafe(boolean isRight, int roll, int wait)
+// {
+  // int rowLeftIndices[] = {0, 8, 4};
+  // int rowRightIndices[] = {6, 2, 10};
   
-  int StartingRow[] = isRight ? rowRight: rowLeft;
-  int FollowingRow[] = isRight ? rowLeft: rowRight;
+  // int StartingRow[] = isRight ? rowRight: rowLeft;
+  // int FollowingRow[] = isRight ? rowLeft: rowRight;
   
-  /*
-   Begin strafe procedure:
-   1. Move starting legs out.
-   2. Move starting legs in, dragging bot with it.
-   3. Move following legs in, poised to extend.
-   4. Extend following legs to 0 degrees.
-   5. Slightly afterwards, extend starting legs to 0 degrees, completing the step.
-   */
-/*
-  for(int i = 0; i <=3; i++){
-    writeServo(StartingRow[i], roll);
-  }
-  
-  delay(wait);
-  
-  for(int i = 0; i<=3; i++){
-    writeServo(StartingRow[i],-roll);
-  }
-  
-  delay(wait);
-  
-  for(int i = 0; i<=3; i++){
-    writeServo(FollowingRow[i], -roll);
-  }
-  
-  for(int i =0; i<=3; i++){
-    writeServo(FollowingRow[i], 0);
-  }
-  
-  delay(wait);
-  
-  for(int i =0; i<=3; i++){
-    writeServo(StartingRow[i], 0);
-  }
-  
-}
-*/
+  // /*
+   // Begin strafe procedure:
+   // 1. Move starting legs out.
+   // 2. Move starting legs in, dragging bot with it.
+   // 3. Move following legs in, poised to extend.
+   // 4. Extend following legs to 0 degrees.
+   // 5. Slightly afterwards, extend starting legs to 0 degrees, completing the 
+      // step.
+   // */
 
+  // for(int i = 0; i <=3; i++){
+    // writeServo(StartingRow[i], roll);
+  // }
+  
+  // delay(wait);
+  
+  // for(int i = 0; i<=3; i++){
+    // writeServo(StartingRow[i],-roll);
+  // }
+  
+  // delay(wait);
+  
+  // for(int i = 0; i<=3; i++){
+    // writeServo(FollowingRow[i], -roll);
+  // }
+  
+  // for(int i =0; i<=3; i++){
+    // writeServo(FollowingRow[i], 0);
+  // }
+  
+  // delay(wait);
+  
+  // for(int i =0; i<=3; i++){
+    // writeServo(StartingRow[i], 0);
+  // }
+  
+// }
 
-/* Converts the desired degree to the servo speified's actual angle of rotation. */
-/* Param(s): servo - the index into the servo array for the servo desired.       */
-/*           degree - the angle for which the servo should be moved to.          */
+/** 
+  * Converts the desired degree to the servo specified's actual angle of 
+  * rotation.
+  * @param servo The index into the servo array for the servo desired.
+  * @param degree The angle for which the servo should be moved to.
+  */
 void writeServo(int servo, int degree)
 {
-  /* Write to the servo the exact degree that is converted from the given one. */
-  servos[servo].write(map(degree, 0, 180, degree0offset[servo], degree180offset[servo]));
+  /* Write to the servo the exact degree that is converted from the given */
+  /* one.                                                                 */
+  servos[servo].write(map(degree, 0, 180, degree0offset[servo], 
+	degree180offset[servo]));
 
   /* Log debug information. */
   char debug_log[32];
   sprintf(debug_log, "Writing %d to Servo #%d\n", degree, servo);
   Serial.print(debug_log);
 }
-

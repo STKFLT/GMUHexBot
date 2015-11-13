@@ -10,63 +10,62 @@
 char* cmd_arr;
 int cmd_len;
 
-/**
-  * Setup the connection over I2C.
-  */
+/** Setup the connection over I2C. **/
 void setupWire()
 {
   cmd_arr = NULL;
   cmd_len = 0;
   
-  Wire.begin(8);              // Join i2c bus with address #8
-  Wire.onReceive(getCMD);   // Register event handeler
+  Wire.begin(8);          // Join i2c bus with address #8
+  Wire.onReceive(getCMD); // Register event handeler
   
   pinMode(LED_PIN, OUTPUT);   // Initialize the LED pin
   digitalWrite(LED_PIN, LOW); // Turn off the LED
 }
 
-void cmd_ctrl()
+/** Run the command if their is one. **/
+void runCMD()
 {
   if(cmd_len > 0)
     parseCMD(cmd_arr, cmd_len);
 }
 
 /**
-  * Prints out the recieved command to serial.
-  * @param howMany The number of bytes recieved.
+  * Prints out the received command to serial.
+  * @param howMany The number of bytes received.
   */
 void printCMD(int howMany)
 {
-  char sentArr[Wire.available()];
-  byte i = 0;
-    
-  while (Wire.available() > 0)
+  getCMD(howMany);
+ 
+  for (int i = 0; i < cmd_len; i++)
   {
-    char c = Wire.read(); // receive byte as a character
-    sentArr[i++] = c;
-  } 
-  
-  for (int j = 0; j < i; j++)
-  {
-    Serial.print(sentArr[j]);
+    Serial.print(cmd_arr[i]);
   }
 }
 
+/**
+  * Prints out the received command to serial.
+  * @param howMany The number of bytes received.
+  */
 void getCMD(int num)
 {
-  cmd_arr = new char[Wire.available()];
+  cmd_arr = new char[Wire.available()+1];
   cmd_len = Wire.available();
   
   byte i = 0;
   while (Wire.available() > 0)
   {
     cmd_arr[i++] = Wire.read(); // receive byte as a character
-  } 
+  }
+  
+  cmd_arr[cmd_len+1] = 0;
 }
 
 /** 
   * Parse and run a command if valid.
-  * @param num The number of bytes.
+  * @param cmd The command to parse.
+  * @param len The length of the command
   */
 void parseCMD(char* cmd, int len)
 {
@@ -105,22 +104,24 @@ void parseCMD(char* cmd, int len)
         if(strcmp(threeBytes, "LFT") == 0)
         {
           //servo loop for turn left
-          turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, PIVOT_PITCH_POSITIVE, PIVOT_PITCH_NEGATIVE, WAIT);
+          turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 
+			PIVOT_PITCH_POSITIVE, PIVOT_PITCH_NEGATIVE, WAIT);
         }
         else if(strcmp(threeBytes, "RGT") == 0) 
         {
           //servo loop for turn right
-          turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, PIVOT_PITCH_POSITIVE, PIVOT_PITCH_NEGATIVE, WAIT);
+          turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, PIVOT_PITCH_POSITIVE,
+			PIVOT_PITCH_NEGATIVE, WAIT);
         }
         else if(strcmp(threeBytes, "FWD") == 0) 
         {
           //servo loop for forwards
-          forward(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+          forward(true);
         }       
         else if(strcmp(threeBytes, "BWD") == 0 )
         {
           //servo loop for back
-          backward(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+          backward(true);
         }
         else
         {
@@ -155,9 +156,10 @@ void parseCMD(char* cmd, int len)
   cmd_len = 0;
 }
 
-/**
-  * Gets the next three bytes from the I2C connection.
-  * @returns Returns a char* for the command.
+/** 
+  * Parse and run a command if valid.
+  * @param cmd The command to parse.
+  * @param len The length of the command
   */
 char* nextThreeBytes(char* cmd, int len, int start)
 {
