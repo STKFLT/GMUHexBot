@@ -4,6 +4,7 @@
  * Created for GMU Robotics club (Fall 2015).
  * Comment Editor: ComradePayne
  */
+
 /* Servo header for the 12 servos of the hexBot. */
 #include <Servo.h>
 
@@ -30,7 +31,7 @@ void setup()
   Serial.begin(9600);
 
   /* Loop through the servos. */
-  for(int i = 0; i < 12; i++)
+  for(int i = 0; i < 2; i++)
   {
     /* Pins start at 2 */
     servos[i].attach(i+2);
@@ -45,27 +46,29 @@ void setup()
 void loop()
 {
   /* Right step. */
-//  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  //step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   /* right turn */
   
-  
+  cmd_ctrl();  
   //delay(500);
   
   /* Left step. */
   //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   delay(50);
-
 }
 
 void backward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
 {
   step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
 }
+
 void forward(boolean isRight, int roll, int pitchPositive, int pitchNegative, int wait)
 {
-  step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
+  //step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
+  writeServo(0, 90);
+  //writeServo(1, 90);
+  //writeServo(2, 90);
 }
-
 
 /* Steps the legs in the triangle specified with the specified angles and wait time. */
 /* Param(s): isRight - a boolean for if the step is the right side or left.          */
@@ -82,6 +85,7 @@ void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, int w
        wait
        );
 }
+
 /* Turn the hexbot either right or left. In theory, we cause the robot to bear left or right
   (depending on isRight's value) by designating the tip of the respective triangle of legs as the "pivot leg".
   This pivot leg would have a shorter stride than the two other legs, causing the robot to slowly turn itself right
@@ -135,23 +139,25 @@ void turn(boolean isRight, int roll,
   
   Serial.println("Step Completed");
 }
+
 //Strafes a single step to the left/right, depending on IsRight's value. Uses the roll and wait values we 
 //#define'd earlier in this sketch.
-void strafe(boolean isRight, int roll, int wait){
-  int rowLeftIndices[] = {0, 8, 4};
+//void strafe(boolean isRight, int roll, int wait){
+/*  int rowLeftIndices[] = {0, 8, 4};
   int rowRightIndices[] = {6, 2, 10};
   
   int StartingRow[] = isRight ? rowRight: rowLeft;
   int FollowingRow[] = isRight ? rowLeft: rowRight;
   
-  /*Begin strafe procedure:
+  /*
+   Begin strafe procedure:
    1. Move starting legs out.
    2. Move starting legs in, dragging bot with it.
    3. Move following legs in, poised to extend.
    4. Extend following legs to 0 degrees.
    5. Slightly afterwards, extend starting legs to 0 degrees, completing the step.
    */
-  
+/*
   for(int i = 0; i <=3; i++){
     writeServo(StartingRow[i], roll);
   }
@@ -179,7 +185,7 @@ void strafe(boolean isRight, int roll, int wait){
   }
   
 }
-
+*/
 
 
 /* Converts the desired degree to the servo speified's actual angle of rotation. */
