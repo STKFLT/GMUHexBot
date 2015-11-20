@@ -9,7 +9,8 @@
 #include <Servo.h>
 
 /* Set constants for the walk loop */
-#define ROLL 30
+#define ROLL  30
+#define ROLL_IN 0
 #define PITCH_POSITIVE 80
 #define PITCH_NEGATIVE 105
 #define PIVOT_PITCH_POSITIVE 80
@@ -38,7 +39,7 @@ void setup()
     /* Pins start at 2 */
     servos[i].attach(i+2);
     /* Resets the position of the servo to 0 degrees. */
-    writeServo(i, i%2 ? 90:0);
+    writeServo(i, i%2 ? 90:ROLL_IN);
   }
   
   //delay(1000);
@@ -134,7 +135,7 @@ void turn(boolean isRight, int roll, int movePitchPositive,
    
   //roll in
   for(int i = legSet; i < legSet + 6; i = i + 2){
-    writeServo(i, 0);
+    writeServo(i, ROLL_IN);
   }
   delay(wait);
   
@@ -154,52 +155,53 @@ void turn(boolean isRight, int roll, int movePitchPositive,
   * @param roll The roll angle for the strafe.
   * @param wait The wait time between movements. 
   */ 
-// void strafe(boolean isRight, int roll, int wait)
-// {
-  // int rowLeftIndices[] = {0, 8, 4};
-  // int rowRightIndices[] = {6, 2, 10};
+/*void strafe(boolean isRight, int roll, int wait)
+{
+  int rowLeftIndices[] = {0, 8, 4};
+  int rowRightIndices[] = {6, 2, 10};
+  int StartingRow[3], FollowingRow[3];
   
-  // int StartingRow[] = isRight ? rowRight: rowLeft;
-  // int FollowingRow[] = isRight ? rowLeft: rowRight;
+  StartingRow = isRight ? rowRightIndices: rowLeftIndices;
+  FollowingRow = isRight ? rowLeftIndices: rowRightIndices;
   
-  // /*
-   // Begin strafe procedure:
-   // 1. Move starting legs out.
-   // 2. Move starting legs in, dragging bot with it.
-   // 3. Move following legs in, poised to extend.
-   // 4. Extend following legs to 0 degrees.
-   // 5. Slightly afterwards, extend starting legs to 0 degrees, completing the 
-      // step.
-   // */
+  /*
+   Begin strafe procedure:
+   1. Move starting legs out.
+   2. Move starting legs in, dragging bot with it.
+   3. Move following legs in, poised to extend.
+   4. Extend following legs to 0 degrees.
+   5. Slightly afterwards, extend starting legs to 0 degrees, completing the 
+      step.
+  */
 
-  // for(int i = 0; i <=3; i++){
-    // writeServo(StartingRow[i], roll);
-  // }
+  /*for(int i = 0; i <=3; i++){
+    writeServo(StartingRow[i], roll);
+  }
   
-  // delay(wait);
+  delay(wait);
   
-  // for(int i = 0; i<=3; i++){
-    // writeServo(StartingRow[i],-roll);
-  // }
+  for(int i = 0; i<=3; i++){
+    writeServo(StartingRow[i],-roll);
+  }
   
-  // delay(wait);
+  delay(wait);
   
-  // for(int i = 0; i<=3; i++){
-    // writeServo(FollowingRow[i], -roll);
-  // }
+  for(int i = 0; i<=3; i++){
+    writeServo(FollowingRow[i], -roll);
+  }
   
-  // for(int i =0; i<=3; i++){
-    // writeServo(FollowingRow[i], 0);
-  // }
+  for(int i =0; i<=3; i++){
+    writeServo(FollowingRow[i], 0);
+  }
   
-  // delay(wait);
+  delay(wait);
   
-  // for(int i =0; i<=3; i++){
-    // writeServo(StartingRow[i], 0);
-  // }
+  for(int i =0; i<=3; i++){
+    writeServo(StartingRow[i], 0);
+  }
   
-// }
-
+ }
+*/
 /** 
   * Converts the desired degree to the servo specified's actual angle of 
   * rotation.
