@@ -21,19 +21,19 @@ Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
 /* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
 /*                          0    1    2    3    4            5    6    7    8    9    10   11 */
-int degree0offset[12] =   {140,   0,  35, 180, 0/*Broken*/,   0,  75, 180, 140,   0,  30, 180};
-int degree180offset[12] = {  0, 180, 160,   0, 0          , 180, 145,   0,   0, 180, 160,   0};
+int degree0offset[12] =   {140,   0,  35, 180,  10,   0,  140, 180, 140,   0,  30, 180};
+int degree180offset[12] = {  0, 180, 160,   0, 170, 170,    0,   0,   0, 180, 160,   0};
 
 /* Initializes the 12 servos. */
 void setup()
 {
   /* Set up the I2C code. */
-  setupWire();
+  //setupWire();
   /* Begin serial communications. */
   Serial.begin(9600);
 
   /* Loop through the servos. */
-  for(int i = 0; i < 2; i++)
+  for(int i = 0; i < 12; i++)
   {
     /* Pins start at 2 */
     servos[i].attach(i+2);
@@ -48,13 +48,13 @@ void setup()
 void loop()
 {
   /* Run the command received over I2C. */
-  runCMD();  
+  //runCMD();  
   
   ///* Right step. */
-  //step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  //delay(500);
+  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  delay(500);
   ///* Left step. */
-  //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   
   delay(50);
 }

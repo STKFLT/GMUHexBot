@@ -9,8 +9,8 @@
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
 /* In the pair patter on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
-int degree0offset[12] =   {140,   0,  35, 180, 0/*Broken*/,   0,  45, 180, 140,   0,  30, 180};
-int degree180offset[12] = {  0, 180, 160,   0, 0          , 180, 145,   0,   0, 180, 160,   0};
+int degree0offset[12] =   {140,   0,  35, 180,  10,   0,  140, 180, 140,   0,  30, 180};
+int degree180offset[12] = {  0, 180, 160,   0, 170, 170,    0,   0,   0, 180, 160,   0};
 
 /* Initializes the 12 servos. */
 void setup()
@@ -31,14 +31,14 @@ void setup()
 
 //reads for integers over serial and writes that angle to all servos
 void loop() {
-  int i = 0;
+  int startI = 0;
   while(Serial.available() > 0) {
     int angle = Serial.parseInt();
-    for(; i < 12; i+=2)
+    for(int i = startI; i < 12; i+=2)
     {
       writeServo( i, angle);
     }
-    i = 1;
+    startI = startI == 0 ? 1:0;
   }
   delay(100);
 }
