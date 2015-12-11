@@ -15,15 +15,15 @@
 #define PITCH_NEGATIVE 105
 #define PIVOT_PITCH_POSITIVE 80
 #define PIVOT_PITCH_NEGATIVE 95
-#define WAIT 500
+#define WAIT 50
 
 /* Array of the 12 servos on the hexBot. */
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
-/* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
-/*                          0    1    2    3    4            5    6    7    8    9    10   11 */
-int degree0offset[12] =   {140,   0,  35, 180,  10,   0,  140, 180, 140,   0,  30, 180};
-int degree180offset[12] = {  0, 180, 160,   0, 170, 170,    0,   0,   0, 180, 160,   0};
+/* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .   */
+/*                          0    1    2    3    4    5    6     7    8    9   10   11    */
+int degree0offset[12] =   {145,   5,  35, 175,  10,   0, 135, 175, 140,  10,  30, 170};
+int degree180offset[12] = {  0, 185, 160,  -5, 170, 170,   0,  -5,   0, 185, 160,  -5};
 
 /* Initializes the 12 servos. */
 void setup()
@@ -53,7 +53,9 @@ void loop()
   
   ///* Right step. */
   step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  delay(500);
+  //turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 0, 0, WAIT);
+  //strafe(true, ROLL, WAIT+50);
+  //delay(50);
   ///* Left step. */
   step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   
@@ -155,11 +157,11 @@ void turn(boolean isRight, int roll, int movePitchPositive,
   * @param roll The roll angle for the strafe.
   * @param wait The wait time between movements. 
   */ 
-/*void strafe(boolean isRight, int roll, int wait)
+void strafe(boolean isRight, int roll, int wait)
 {
   int rowLeftIndices[] = {0, 8, 4};
   int rowRightIndices[] = {6, 2, 10};
-  int StartingRow[3], FollowingRow[3];
+  int *StartingRow, *FollowingRow;
   
   StartingRow = isRight ? rowRightIndices: rowLeftIndices;
   FollowingRow = isRight ? rowLeftIndices: rowRightIndices;
@@ -174,34 +176,31 @@ void turn(boolean isRight, int roll, int movePitchPositive,
       step.
   */
 
-  /*for(int i = 0; i <=3; i++){
+  for(int i = 0; i < 3; i++){
     writeServo(StartingRow[i], roll);
   }
   
   delay(wait);
   
-  for(int i = 0; i<=3; i++){
-    writeServo(StartingRow[i],-roll);
+  for(int i = 0; i< 3; i++){
+    writeServo(StartingRow[i], 0);
+  }
+    
+  delay(wait);
+  
+  for(int i = 0; i< 3; i++){
+    writeServo(FollowingRow[i], -roll);
   }
   
   delay(wait);
   
-  for(int i = 0; i<=3; i++){
-    writeServo(FollowingRow[i], -roll);
-  }
-  
-  for(int i =0; i<=3; i++){
+  for(int i =0; i< 3; i++){
     writeServo(FollowingRow[i], 0);
   }
   
   delay(wait);
-  
-  for(int i =0; i<=3; i++){
-    writeServo(StartingRow[i], 0);
-  }
-  
  }
-*/
+ 
 /** 
   * Converts the desired degree to the servo specified's actual angle of 
   * rotation.

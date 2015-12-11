@@ -9,8 +9,8 @@
 Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
 /* In the pair patter on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .    */
-int degree0offset[12] =   {140,   0,  35, 180,  10,   0,  140, 180, 140,   0,  30, 180};
-int degree180offset[12] = {  0, 180, 160,   0, 170, 170,    0,   0,   0, 180, 160,   0};
+int degree0offset[12] =   {145,   5,  35, 175,  10,   0, 135, 175, 140,  10,  30, 170};
+int degree180offset[12] = {  0, 185, 160,  -5, 170, 170,   0,  -5,   0, 185, 160,  -5};
 
 /* Initializes the 12 servos. */
 void setup()
