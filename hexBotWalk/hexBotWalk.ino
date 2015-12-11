@@ -41,7 +41,7 @@ void setup()
     /* Resets the position of the servo to 0 degrees. */
     writeServo(i, i%2 ? 90:ROLL_IN);
   }
-  
+  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   //delay(1000);
 }
 
@@ -52,10 +52,10 @@ void loop()
   //runCMD();  
   
   ///* Right step. */
-  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 90, 90, WAIT);
   delay(500);
   ///* Left step. */
-  step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
   
   delay(50);
 }
@@ -121,13 +121,14 @@ void turn(boolean isRight, int roll, int movePitchPositive,
   int legSet = isRight ? 0 : 6;
  
   //roll out
-  for(int i = legSet; i < legSet + 6; i = i + 2)
-  {
-    writeServo(i, roll);
+  writeServo(legSet, roll);
+  if(pivotPitchPositive != pivotPitchNegative){
+    writeServo(legSet + 2, roll);
   }
+  writeServo(legSet + 4, roll);
   delay(wait);
 
-  writeServo(legSet + 1, movePitchPositive); 
+  writeServo(legSet + 1, movePitchPositive);
   writeServo(legSet + 3, pivotPitchPositive);
   writeServo(legSet + 5, movePitchPositive);
  
