@@ -9,7 +9,7 @@ Contains:
 * hexBotLegsComms.ino - Communications protocol for the slave Arduino, in this case the leg controler, to read.
 * hexBotBrainComms.ino - Communications protocol for the master Arduino, acting as a brain, to send commands out via I<sup>2</sup>C.
 
-####Leg Assignment
+#### Leg Assignment
 <pre>
      Front
    __________
@@ -20,3 +20,7 @@ Contains:
  0-|-1    7-|-6
    ----------
 </pre>
+
+#### Links
+[Dr. Lofaro's Wiki Page](http://wiki.lofarolabs.com/index.php/Main_Page)
+[Dynamixel XL-320 Robot Actuator](http://support.robotis.com/en/product/dynamixel/xl-series/xl-320.htm)
