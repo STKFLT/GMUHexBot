@@ -22,5 +22,6 @@ Contains:
 </pre>
 
 #### Links
-[Dr. Lofaro's Wiki Page](http://wiki.lofarolabs.com/index.php/Main_Page)
+
+[Dr. Lofaro's Wiki Page](http://wiki.lofarolabs.com/index.php/Main_Page)<br>
 [Dynamixel XL-320 Robot Actuator](http://support.robotis.com/en/product/dynamixel/xl-series/xl-320.htm)
