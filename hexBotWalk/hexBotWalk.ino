@@ -52,9 +52,11 @@ void loop()
   //runCMD();  
   
   ///* Right step. */
-  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  //turn(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 0, 0, WAIT);
-  //strafe(true, ROLL, WAIT+50);
+  //step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
+  //turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 90, 90, WAIT);
+  //delay(50);
+  strafe(true, ROLL, WAIT+50);
+  
   //delay(50);
   ///* Left step. */
   //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
