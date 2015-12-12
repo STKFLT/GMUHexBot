@@ -8,6 +8,9 @@
 /* Servo header for the 12 servos of the hexBot. */
 #include <Servo.h>
 
+#define DEBUG 0
+#define COMMS 0
+
 /* Set constants for the walk loop */
 #define ROLL  30
 #define ROLL_IN 0
@@ -22,16 +25,21 @@ Servo servos[12];
 /* The offsets for the 12 servos in degrees. Used to map natural angles to servo angles. */
 /* In the pair pattern on leg_i_perp_servo, leg_i_par_servo, leg_i+1_perp_servo, ... .   */
 /*                          0    1    2    3    4    5    6     7    8    9   10   11    */
-int degree0offset[12] =   {145,   5,  35, 175,  10,   0, 135, 175, 140,  10,  30, 170};
+int degree0offset[12]   = {145,   5,  35, 175,  10,   0, 135, 175, 140,  10,  30, 170};
 int degree180offset[12] = {  0, 185, 160,  -5, 170, 170,   0,  -5,   0, 185, 160,  -5};
 
 /* Initializes the 12 servos. */
 void setup()
 {
-  /* Set up the I2C code. */
-  //setupWire();
-  /* Begin serial communications. */
-  Serial.begin(9600);
+  #if COMMS
+    /* Set up the I2C code. */
+    setupWire();
+  #endif
+
+  #if DEBUG
+    /* Begin serial communications. */
+    Serial.begin(9600);
+  #endif
 
   /* Loop through the servos. */
   for(int i = 0; i < 12; i++)
@@ -41,37 +49,26 @@ void setup()
     /* Resets the position of the servo to 0 degrees. */
     writeServo(i, i%2 ? 90:ROLL_IN);
   }
-  step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  //delay(1000);
 }
 
 /* Loop through the walk cycle. */
 void loop()
 {
-  /* Run the command received over I2C. */
-  //runCMD();  
+  #if COMMS
+    /* Run the command received over I2C. */
+    runCMD();  
+  #else
+    /* Right step. */
+    forward(true);
+//    turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 90, 90, WAIT);
+//    strafe(true, ROLL, WAIT+50);
+    delay(WAIT);
+    
+    /* Left step. */
+    forward(false);
+  #endif
   
-  ///* Right step. */
-  //step(true, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  //turn(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, 90, 90, WAIT);
-  //delay(50);
-  strafe(true, ROLL, WAIT+50);
-  
-  //delay(50);
-  ///* Left step. */
-  //step(false, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE, WAIT);
-  
-  delay(50);
-}
-
-/**
-  * Steps the legs backward in the triangle specified with the specified angles 
-  * and wait time.
-  * @param isRight A boolean for if the step is the right side or left.
-  */
-void backward(boolean isRight)
-{
-  step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
+  delay(WAIT);
 }
 
 /**
@@ -82,6 +79,16 @@ void backward(boolean isRight)
 void forward(boolean isRight)
 {
   step(isRight, ROLL, PITCH_POSITIVE, PITCH_NEGATIVE,  WAIT);
+}
+
+/**
+  * Steps the legs backward in the triangle specified with the specified angles 
+  * and wait time.
+  * @param isRight A boolean for if the step is the right side or left.
+  */
+void backward(boolean isRight)
+{
+  step(isRight, ROLL, PITCH_NEGATIVE, PITCH_POSITIVE,  WAIT);
 }
 
 /**
@@ -96,8 +103,7 @@ void forward(boolean isRight)
 void step(boolean isRight, int roll, int pitchPositive, int pitchNegative, 
   int wait)
 {
-  turn(isRight, roll, pitchPositive, pitchNegative, pitchPositive, 
-	pitchNegative, wait);
+  turn(isRight, roll, pitchPositive, pitchNegative, pitchPositive, pitchNegative, wait);
 }
 
 /**
@@ -162,7 +168,7 @@ void turn(boolean isRight, int roll, int movePitchPositive,
   */ 
 void strafe(boolean isRight, int roll, int wait)
 {
-  int rowLeftIndices[] = {0, 8, 4};
+  int rowLeftIndices[]  = {0, 8,  4};
   int rowRightIndices[] = {6, 2, 10};
   int *StartingRow, *FollowingRow;
   
@@ -215,10 +221,12 @@ void writeServo(int servo, int degree)
   /* Write to the servo the exact degree that is converted from the given */
   /* one.                                                                 */
   servos[servo].write(map(degree, 0, 180, degree0offset[servo], 
-	degree180offset[servo]));
+    degree180offset[servo]));
 
   /* Log debug information. */
-  char debug_log[32];
-  sprintf(debug_log, "Writing %d to Servo #%d\n", degree, servo);
-  Serial.print(debug_log);
+  #if DEBUG
+    char debug_log[32];
+    sprintf(debug_log, "Writing %d to Servo #%d\n", degree, servo);
+    Serial.print(debug_log);
+  #endif
 }
