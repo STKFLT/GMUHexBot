@@ -23,7 +23,7 @@ Contains:
 
 #### Videos
 
-[Walking, strafing, and turning.](https://www.youtube.com/playlist?list=PLwq6DT8sjevVq0LsvVSGXAnbzRftWv6IH)
+[Walking, strafing, and turning](https://www.youtube.com/playlist?list=PLwq6DT8sjevVq0LsvVSGXAnbzRftWv6IH)
 
 #### Links
 
