@@ -21,6 +21,10 @@ Contains:
    ----------
 </pre>
 
+#### Videos
+
+[Walking, strafing, and turning.](https://www.youtube.com/playlist?list=PLwq6DT8sjevVq0LsvVSGXAnbzRftWv6IH)
+
 #### Links
 
 [Dr. Lofaro's Wiki Page](http://wiki.lofarolabs.com/index.php/Main_Page)<br>
